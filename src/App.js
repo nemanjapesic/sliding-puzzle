@@ -21,7 +21,6 @@ const getShuffledPuzzle = () => {
   }
 
   return [rowOne, rowTwo, rowThree];
-  // return [[1, 8, 2], [0, 4, 3], [7, 6, 5]];
 };
 
 const flattenArray = arr => {
@@ -39,12 +38,9 @@ const getInversionsCount = arr => {
       (val, j) => i < j && val < currentValue
     );
     inversions.push(currentInversions.length);
-    // console.log(currentInversions);
   }
 
   const inversionsCount = inversions.reduce((total, val) => total + val, 0);
-
-  console.log(inversionsCount);
 
   return inversionsCount;
 };
@@ -72,12 +68,6 @@ export default function App() {
     setPuzzle(getPuzzle());
   }, []);
 
-  const checkCompletion = puzzle => {
-    if (flattenArray(puzzle).join("") === "123456780") {
-      setComplete(true);
-    }
-  };
-
   const movePiece = (x, y) => {
     if (!complete) {
       if (checkNeighbours(x, y) || checkNeighbours(x, y, 2)) {
@@ -104,12 +94,19 @@ export default function App() {
           newPuzzle[x - 1][y] = newPuzzle[x][y];
           newPuzzle[x][y] = 0;
         }
+
         setPuzzle(newPuzzle);
 
         setMoves(moves + 1);
 
         checkCompletion(newPuzzle);
       }
+    }
+  };
+
+  const checkCompletion = puzzle => {
+    if (flattenArray(puzzle).join("") === "123456780") {
+      setComplete(true);
     }
   };
 
@@ -130,6 +127,12 @@ export default function App() {
     const emptySlot = neighbours.find(el => typeof el === "object");
 
     return emptySlot;
+  };
+
+  const resetPuzzle = () => {
+    setComplete(false);
+    setPuzzle(getPuzzle());
+    setMoves(0);
   };
 
   return (
@@ -183,9 +186,7 @@ export default function App() {
         <p>
           <button
             onClick={() => {
-              setComplete(false);
-              setPuzzle(getPuzzle());
-              setMoves(0);
+              resetPuzzle();
             }}
           >
             Play Again
